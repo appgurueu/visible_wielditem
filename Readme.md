@@ -19,6 +19,12 @@ Code written by [appgurueu](https://github.com/appgurueu) and licensed under the
 
 The screenshot (`screenshot.png`) uses [Hugues Ross'](https://content.minetest.net/users/Hugues%20Ross/) [RPG16](https://content.minetest.net/packages/Hugues%20Ross/rpg16/) texture pack, which is licensed under CC-BY-SA-4.0, and is therefore licensed under CC-BY-SA-4.0 as well.
 
+## Links
+
+* [GitHub](https://github.com/appgurueu/visible_wielditem) - sources, issue tracking, contributing
+* [Discord](https://discord.gg/ysP74by) - discussion, chatting
+* [Minetest Forum](https://forum.minetest.net/viewtopic.php?f=9&t=27714) - (more organized) discussion
+* [ContentDB](https://content.minetest.net/packages/LMD/visible_wielditem/) - releases (downloading from GitHub is recommended)
 
 ## API
 
