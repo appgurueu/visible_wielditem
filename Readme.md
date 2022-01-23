@@ -15,7 +15,10 @@ Modern alternative to [`wield3d`](https://github.com/stujones11/wield3d):
 
 ## License
 
-Written by [appgurueu](https://github.com/appgurueu) and licensed under the MIT license.
+Code written by [appgurueu](https://github.com/appgurueu) and licensed under the MIT license.
+
+The screenshot (`screenshot.png`) uses [Hugues Ross'](https://content.minetest.net/users/Hugues%20Ross/) [RPG16](https://content.minetest.net/packages/Hugues%20Ross/rpg16/) texture pack, which is licensed under CC-BY-SA-4.0, and is therefore licensed under CC-BY-SA-4.0 as well.
+
 
 ## API
 
