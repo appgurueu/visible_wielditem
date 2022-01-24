@@ -7,7 +7,7 @@ Shows wielded items in-world.
 Modern alternative to [`wield3d`](https://github.com/stujones11/wield3d):
 
 * Relies less on deprecated engine APIs, doesn't aim to support older MT versions
-* Supports colored items. Works well with [`epidermis`](https://github.com/epidermis).
+* Supports colored items. Works well with [`epidermis`](https://github.com/appgurueu/epidermis).
 * Supports glow (for environmental lighting use a wielded light mod)
 * Indicates size of stacks
 * Provides a proper API for mods to use
