@@ -12,7 +12,7 @@ minetest.register_on_joinplayer(create_entity)
 
 minetest.register_on_leaveplayer(function(player)
 	local player_name = player:get_player_name()
-	entities[player_name]:remove()
+	entities[player_name].object:remove()
 	entities[player_name] = nil
 end)
 
