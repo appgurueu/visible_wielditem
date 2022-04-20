@@ -72,9 +72,9 @@ function visible_wielditem.get_attachment(modelname, itemname)
 		end
 		if tweaks.scale then attachment.scale = attachment.scale * tweaks.scale end
 	end
-	local def = minetest.registered_items[itemname]
+	local def = minetest.registered_items[itemname] or {}
 	local item_tweaks = visible_wielditem.item_tweaks
-	apply_tweaks(item_tweaks.types[def and def.type or "unknown"])
+	apply_tweaks(item_tweaks.types[def.type or "unknown"])
 	for groupname, rating in pairs(def.groups or {}) do
 		if rating ~= 0 then
 			apply_tweaks(item_tweaks.groups[groupname])
