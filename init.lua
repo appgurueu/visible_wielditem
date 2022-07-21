@@ -1,19 +1,17 @@
 visible_wielditem = {}
 
+local entity_name = "visible_wielditem:visible_wielditem"
+
 local entities = {}
 
 local function create_entity(player)
-	local entity = minetest.add_entity(player:get_pos(), "visible_wielditem:visible_wielditem"):get_luaentity()
-	entity:_set_player(player)
-	entities[player:get_player_name()] = entity
+	minetest.add_entity(assert(player:get_pos()), entity_name):get_luaentity():_set_player(player)
 end
 
 minetest.register_on_joinplayer(create_entity)
 
 minetest.register_on_leaveplayer(function(player)
-	local player_name = player:get_player_name()
-	entities[player_name].object:remove()
-	entities[player_name] = nil
+	entities[player:get_player_name()]:_remove()
 end)
 
 visible_wielditem.model_attachments = {
@@ -85,7 +83,7 @@ function visible_wielditem.get_attachment(modelname, itemname)
 	return attachment
 end
 
-minetest.register_entity("visible_wielditem:visible_wielditem", {
+minetest.register_entity(entity_name, {
 	initial_properties = {
 		physical = false,
 		collide_with_objects = false,
@@ -127,6 +125,7 @@ minetest.register_entity("visible_wielditem:visible_wielditem", {
 		self._player = player -- HACK this assumes that PlayerRefs don't change
 		self:_set_item(player:get_wielded_item())
 		self:_update_attachment()
+		entities[player:get_player_name()] = self
 	end,
 	on_deactivate = function(self)
 		create_entity(self._player)
@@ -148,6 +147,11 @@ minetest.register_entity("visible_wielditem:visible_wielditem", {
 		}
 		self:_update_attachment()
 	end,
+	_remove = function(self)
+		self.on_deactivate = modlib.func.no_op -- don't recreate entity; it's supposed to be removed
+		self.object:remove()
+		entities[self._player:get_player_name()] = nil
+	end
 	-- TODO on_step: reattach regularly to work around engine bugs?
 })
 
