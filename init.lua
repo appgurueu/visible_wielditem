@@ -5,7 +5,9 @@ local entity_name = "visible_wielditem:visible_wielditem"
 local entities = {}
 
 local function create_entity(player)
-	minetest.add_entity(assert(player:get_pos()), entity_name):get_luaentity():_set_player(player)
+	local pos = player:get_pos()
+	if not pos then return end -- HACK deal with player object being invalidated before on_leaveplayer has been called
+	minetest.add_entity(pos, entity_name):get_luaentity():_set_player(player)
 end
 
 minetest.register_on_joinplayer(create_entity)
