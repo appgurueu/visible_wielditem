@@ -5,7 +5,7 @@ local entity_name = "visible_wielditem:visible_wielditem"
 local function create_entity(player)
 	local pos = player:get_pos()
 	if not pos then return end -- HACK deal with player object being invalidated before on_leaveplayer has been called
-	local entity = minetest.add_entity(pos, entity_name):get_luaentity()
+	local entity = core.add_entity(pos, entity_name):get_luaentity()
 	entity:_set_player(player)
 	return entity
 end
@@ -16,7 +16,7 @@ local function get_player_data(player)
 	return players[player:get_player_name()]
 end
 
-minetest.register_on_joinplayer(function(player)
+core.register_on_joinplayer(function(player)
 	players[player:get_player_name()] = {
 		entity = nil,
 		visible = true,
@@ -24,7 +24,7 @@ minetest.register_on_joinplayer(function(player)
 	create_entity(player)
 end)
 
-minetest.register_on_leaveplayer(function(player)
+core.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	local data = players[name]
 	data.entity:_remove()
@@ -87,7 +87,7 @@ function visible_wielditem.get_attachment(modelname, itemname)
 		end
 		if tweaks.scale then attachment.scale = attachment.scale * tweaks.scale end
 	end
-	local def = minetest.registered_items[itemname] or {}
+	local def = core.registered_items[itemname] or {}
 	local item_tweaks = visible_wielditem.item_tweaks
 	apply_tweaks(item_tweaks.types[def.type or "unknown"])
 	for groupname, rating in pairs(def.groups or {}) do
@@ -111,7 +111,7 @@ function visible_wielditem.is_visible(player)
 	return get_player_data(player).visible
 end
 
-minetest.register_entity(entity_name, {
+core.register_entity(entity_name, {
 	initial_properties = {
 		physical = false,
 		collide_with_objects = false,

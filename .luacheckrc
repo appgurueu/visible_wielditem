@@ -1,6 +1,6 @@
 globals = {"visible_wielditem"}
 read_globals = {
-	"minetest",
+	"core",
 	"modlib",
 	"ItemStack",
 	"vector",
