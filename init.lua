@@ -2,18 +2,33 @@ visible_wielditem = {}
 
 local entity_name = "visible_wielditem:visible_wielditem"
 
-local entities = {}
-
 local function create_entity(player)
 	local pos = player:get_pos()
 	if not pos then return end -- HACK deal with player object being invalidated before on_leaveplayer has been called
-	minetest.add_entity(pos, entity_name):get_luaentity():_set_player(player)
+	local entity = minetest.add_entity(pos, entity_name):get_luaentity()
+	entity:_set_player(player)
+	return entity
 end
 
-minetest.register_on_joinplayer(create_entity)
+local players = {}
+
+local function get_player_data(player)
+	return players[player:get_player_name()]
+end
+
+minetest.register_on_joinplayer(function(player)
+	players[player:get_player_name()] = {
+		entity = nil,
+		visible = true,
+	}
+	create_entity(player)
+end)
 
 minetest.register_on_leaveplayer(function(player)
-	entities[player:get_player_name()]:_remove()
+	local name = player:get_player_name()
+	local data = players[name]
+	data.entity:_remove()
+	players[name] = nil
 end)
 
 visible_wielditem.model_attachments = {
@@ -85,6 +100,17 @@ function visible_wielditem.get_attachment(modelname, itemname)
 	return attachment
 end
 
+function visible_wielditem.set_visibility(player, visible)
+	assert(type(visible) == "boolean")
+	local data = get_player_data(player)
+	data.visible = visible
+	data.entity:_refresh()
+end
+
+function visible_wielditem.is_visible(player)
+	return get_player_data(player).visible
+end
+
 minetest.register_entity(entity_name, {
 	initial_properties = {
 		physical = false,
@@ -127,7 +153,7 @@ minetest.register_entity(entity_name, {
 		self._player = player -- HACK this assumes that PlayerRefs don't change
 		self:_set_item(player:get_wielded_item())
 		self:_update_attachment()
-		entities[player:get_player_name()] = self
+		get_player_data(player).entity = self
 	end,
 	on_deactivate = function(self)
 		create_entity(self._player)
@@ -135,7 +161,7 @@ minetest.register_entity(entity_name, {
 	_set_item = function(self, item)
 		self._item = item
 		local object = self.object
-		if item:is_empty() then
+		if item:is_empty() or not get_player_data(self._player).visible then
 			object:set_properties{
 				is_visible = false,
 				wield_item = ""
@@ -149,16 +175,19 @@ minetest.register_entity(entity_name, {
 		}
 		self:_update_attachment()
 	end,
+	_refresh = function(self)
+		self:_set_item(self._item)
+	end,
 	_remove = function(self)
-		self.on_deactivate = modlib.func.no_op -- don't recreate entity; it's supposed to be removed
+		self.on_deactivate = function() end -- don't recreate entity; it's supposed to be removed
 		self.object:remove()
-		entities[self._player:get_player_name()] = nil
+		get_player_data(self._player).entity = nil
 	end
 	-- TODO on_step: reattach regularly to work around engine bugs?
 })
 
 modlib.minetest.register_on_wielditem_change(function(player, _, _, item)
-	local entity = entities[player:get_player_name()]
+	local entity = get_player_data(player).entity
 	if entity.object:get_pos() then
 		entity:_set_item(item)
 	else -- recreate entity if necessary

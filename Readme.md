@@ -34,6 +34,14 @@ All within the `visible_wielditem` global variable.
 
 Returns a table with fields `bonename`, `position` (unit: metric/nodes), `rotation` (unit: degrees) and `scale` (number, unit: metric/nodes) based on model attachments and item tweaks.
 
+### `set_visible(player, visible)`
+
+Controls whether the wield item should be visible for an online player.
+
+### `get_visible(player)`
+
+Corresponding getter for convenience.
+
 ### `model_attachments`
 
 Table. Keys are model media (file) names, values are tables with field `bonename`, `position`, `rotation` and `scale`. The special field `default` is used for default attachment settings based on `character.b3d` if no model attachments are specified for a player model or if the specified attachment settings are incomplete.
